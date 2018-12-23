@@ -26,11 +26,40 @@ var io = socketIO(server);
 io.on('connection', (socket) => {
   console.log('New user connected');
 
+  // emit a custom event without data
+  // socket.emit('newEmail');
+
+  // emit a custom event with data
+  socket.emit('newEmail', {
+    from: 'mik@example.com',
+    text: 'test text',
+    createdAt: 123
+  });
+
+  /*
+  // custom event listenter example
+  socket.on('createEmail', (newEmail) => {
+    console.log('createEmail', newEmail);
+  });
+  */
+
+  // custom event listenter
+  socket.on('createMessage', (message) => {
+    console.log('createMessage: ', message);
+  });
+
+  //
+  socket.emit('newMessage', {
+    from: 'User 2',
+    text: 'test 2',
+    createdAt: 123123
+  });
+
   // The disconnect event fires whenever the connection drops
   socket.on('disconnect', () => {
     console.log('Disconnected from server');
   });
-  
+
 });
 
 
