@@ -12,12 +12,13 @@ socket.on('connect', function() {
   });
   */
 
+  /*
   // when emitting a custom event, the first arguement is the event name, the second argument is the data
   socket.emit('createMessage', {
     from: 'User1',
     text: 'Test one'
   });
-
+  */
 });
 
 

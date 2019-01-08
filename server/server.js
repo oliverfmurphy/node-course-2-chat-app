@@ -29,12 +29,14 @@ io.on('connection', (socket) => {
   // emit a custom event without data
   // socket.emit('newEmail');
 
+  /*
   // emit a custom event with data
   socket.emit('newEmail', {
     from: 'mik@example.com',
     text: 'test text',
     createdAt: 123
   });
+  */
 
   /*
   // custom event listenter example
@@ -46,6 +48,14 @@ io.on('connection', (socket) => {
   // custom event listenter
   socket.on('createMessage', (message) => {
     console.log('createMessage: ', message);
+    // io.emit emits an event to every single connection
+    // emit the even newMessage
+    io.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      // createdAt propery created by the server to prevent a client from spoofing when a message was created
+      createdAt: new Date().getTime()
+    });
   });
 
   //
