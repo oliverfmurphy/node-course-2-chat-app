@@ -26,6 +26,22 @@ var io = socketIO(server);
 io.on('connection', (socket) => {
   console.log('New user connected');
 
+  // emit a message to everyone about a user who just joined
+  socket.emit('newMessage', {
+    from: 'admin@example.com',
+    text: 'Welcome to the app!',
+    // createdAt propery created by the server to prevent a client from spoofing when a message was created
+    createdAt: new Date().getTime()
+  });
+
+  // emit a message to everyone else apart from the user who just joined
+  socket.broadcast.emit('newMessage', {
+    from: 'admin@example.com',
+    text: 'New user joined',
+    // createdAt propery created by the server to prevent a client from spoofing when a message was created
+    createdAt: new Date().getTime()
+  });
+
   // emit a custom event without data
   // socket.emit('newEmail');
 
@@ -48,14 +64,26 @@ io.on('connection', (socket) => {
   // custom event listenter
   socket.on('createMessage', (message) => {
     console.log('createMessage: ', message);
+
     // io.emit emits an event to every single connection
-    // emit the even newMessage
+    // emit the event newMessage
     io.emit('newMessage', {
       from: message.from,
       text: message.text,
       // createdAt propery created by the server to prevent a client from spoofing when a message was created
       createdAt: new Date().getTime()
     });
+
+    /*
+    // to broadcast the message we have to specify an individual socket
+    // broadcast the event to everybody but this socket
+    socket.broadcast.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      // createdAt propery created by the server to prevent a client from spoofing when a message was created
+      createdAt: new Date().getTime()
+    });
+    */
   });
 
   //
