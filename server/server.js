@@ -4,6 +4,10 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 
+// use ES6 destructuring to grab generateMessage
+// now we have access to generateMessage we can call it rather than generating objects below
+const {generateMessage} = require('./utils/message');
+
 const publicPath = path.join(__dirname, '/../public');
 const port = process.env.PORT || 3000;
 
@@ -27,20 +31,26 @@ io.on('connection', (socket) => {
   console.log('New user connected');
 
   // emit a message to everyone about a user who just joined
+  /*
   socket.emit('newMessage', {
     from: 'admin@example.com',
     text: 'Welcome to the app!',
     // createdAt propery created by the server to prevent a client from spoofing when a message was created
     createdAt: new Date().getTime()
   });
+  */
+  socket.emit('newMessage', generateMessage('Admin', 'Welcome'));
 
   // emit a message to everyone else apart from the user who just joined
+  /*
   socket.broadcast.emit('newMessage', {
     from: 'admin@example.com',
     text: 'New user joined',
     // createdAt propery created by the server to prevent a client from spoofing when a message was created
     createdAt: new Date().getTime()
   });
+  */
+  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 
   // emit a custom event without data
   // socket.emit('newEmail');
@@ -67,12 +77,15 @@ io.on('connection', (socket) => {
 
     // io.emit emits an event to every single connection
     // emit the event newMessage
+    /*
     io.emit('newMessage', {
       from: message.from,
       text: message.text,
       // createdAt propery created by the server to prevent a client from spoofing when a message was created
       createdAt: new Date().getTime()
     });
+    */
+    io.emit('newMessage', generateMessage(message.from, message.text));
 
     /*
     // to broadcast the message we have to specify an individual socket
